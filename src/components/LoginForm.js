@@ -1,24 +1,24 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, Form } from 'react-bootstrap'
 import { Formik } from 'formik'
 import * as yup from 'yup'
 import styled from 'styled-components'
+import { useHistory } from 'react-router'
 
-const initialValues = { email: '', password: '' }
+const LoginForm = () => {
+  const history = useHistory()
 
-const onSubmit = (values) => {
-  console.log('Form data', values)
-}
+  const initialValues = { username: '', password: '' }
 
-const schema = yup.object({
-  email: yup
-    .string()
-    .email('Invalid email format')
-    .required('Email is a required field'),
-  password: yup.string().required('Password is a required field'),
-})
+  const schema = yup.object({
+    username: yup.string().required('Username is a required field'),
+    password: yup.string().required('Password is a required field'),
+  })
 
-const Login = () => {
+  const onSubmit = (values) => {
+    history.push(`/dashboard/${values.username}`)
+  }
+
   return (
     <Wrapper>
       <Formik
@@ -35,25 +35,22 @@ const Login = () => {
           errors,
         }) => (
           <Form noValidate onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>Email address</Form.Label>
+            <Form.Group className="mb-3" controlId="formBasicUsername">
+              <Form.Label>Username</Form.Label>
               <Form.Control
-                type="email"
-                name="email"
-                placeholder="Enter email"
-                value={values.email}
+                type="text"
+                name="username"
+                placeholder="Enter username"
+                value={values.username}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                isValid={touched.email && !errors.email}
-                isInvalid={touched.email && errors.email}
+                isValid={touched.username && !errors.username}
+                isInvalid={touched.username && errors.username}
               />
               <Form.Control.Feedback />
               <Form.Control.Feedback type="invalid">
-                {errors.email}
+                {errors.username}
               </Form.Control.Feedback>
-              <Form.Text className="text-muted">
-                We'll never share your email with anyone else.
-              </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -91,4 +88,4 @@ const Wrapper = styled.div`
   padding: 15px;
 `
 
-export default Login
+export default LoginForm
