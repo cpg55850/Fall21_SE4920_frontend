@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 const AlertContext = React.createContext({ message: '' })
 
-const AlertContextProvider = ({ children }) => {
+export const AlertContextProvider = ({ children }) => {
   const [alert, setAlert] = useState({ message: '' })
 
   const setAlertTimeout = (msg, timeout = 5000) => {
@@ -18,4 +18,4 @@ const AlertContextProvider = ({ children }) => {
   )
 }
 
-export { AlertContextProvider, AlertContext }
+export const useAlert = () => React.useContext(AlertContext)

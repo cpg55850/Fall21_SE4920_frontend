@@ -1,13 +1,13 @@
 import React from 'react'
-import { useParams } from 'react-router'
 import { Link } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 const Welcome = () => {
-  const { name } = useParams()
+  const { user } = useAuth()
 
   return (
     <div>
-      <h1>Welcome, {name}</h1>
+      <h1>Welcome, {user ? user : ''}</h1>
       <Link to="/todos">Manage Todos</Link>
     </div>
   )

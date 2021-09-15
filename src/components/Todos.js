@@ -1,35 +1,35 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Table, Button } from 'react-bootstrap'
 import styled from 'styled-components'
 import { deleteTodo, getTodos } from '../actions/todos'
-import { AlertContext } from '../context/AlertContext'
+import { useAlert } from '../context/AlertContext'
 import { useHistory } from 'react-router'
 import Spinner from './Spinner'
 import moment from 'moment'
+import { useAuth } from '../context/AuthContext'
 
 const Todos = () => {
   const [todos, setTodos] = useState([])
   const [isLoading, setIsLoading] = useState(true)
-  const { setAlertTimeout } = useContext(AlertContext)
+  const { setAlertTimeout } = useAlert()
+  const { user } = useAuth()
   const history = useHistory()
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getTodos('Charlie')
+      const data = await getTodos(user)
 
       setTodos(data)
       setIsLoading(false)
     }
 
     fetchData()
-  }, [])
+  }, [user])
 
   const deleteTodoClicked = async (id) => {
-    let user = 'Charlie'
-
     await deleteTodo(user, id)
 
-    const data = await getTodos('Charlie')
+    const data = await getTodos(user)
     setTodos(data)
 
     setAlertTimeout({ message: `${user}'s todo was deleted` })
@@ -63,7 +63,7 @@ const Todos = () => {
         </thead>
         <tbody>
           {todos.map((todo) => (
-            <tr>
+            <tr key={todo.id}>
               <td>{todo.id}</td>
               <td>{todo.description}</td>
               <td>{todo.isCompleted ? 'true' : 'false'}</td>

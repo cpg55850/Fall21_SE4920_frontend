@@ -1,12 +1,19 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Button, Form } from 'react-bootstrap'
 import { Formik } from 'formik'
 import * as yup from 'yup'
 import styled from 'styled-components'
 import { useHistory } from 'react-router'
+import { useAuth } from '../context/AuthContext'
+import { useAlert } from '../context/AlertContext'
+import { SetupAxiosInterceptors } from '../utils/SetupAxiosInterceptors'
+import { jwtAuthenticate } from '../actions/auth'
+import axios from 'axios'
 
 const LoginForm = () => {
   const history = useHistory()
+  const { login } = useAuth()
+  const { setAlertTimeout } = useAlert()
 
   const initialValues = { username: '', password: '' }
 
@@ -16,7 +23,25 @@ const LoginForm = () => {
   })
 
   const onSubmit = (values) => {
-    history.push(`/dashboard/${values.username}`)
+    const basicAuthHeader =
+      'Basic ' + window.btoa(values.username + ':' + values.password)
+
+    axios
+      .get('http://localhost:8080/basicauth', {
+        headers: { authorization: basicAuthHeader },
+      })
+      .then((res) => {
+        console.log(res)
+        // SetupAxiosInterceptors(basicAuthHeader)
+        setAlertTimeout({ message: 'Login Success!' })
+        login(values.username)
+        history.push(`/dashboard`)
+      })
+      .catch((err) => {
+        console.log(err)
+        setAlertTimeout({ message: `${err}` })
+        return
+      })
   }
 
   return (

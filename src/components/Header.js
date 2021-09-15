@@ -1,10 +1,12 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Container, Nav, Navbar, Alert } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import { AlertContext } from '../context/AlertContext'
+import { useAlert } from '../context/AlertContext'
+import { useAuth } from '../context/AuthContext'
 
 const Header = () => {
-  const { alert } = useContext(AlertContext)
+  const { alert } = useAlert()
+  const { isLoggedIn, user } = useAuth()
 
   return (
     <>
@@ -18,17 +20,30 @@ const Header = () => {
                 <Link to="/">Home</Link>
               </Nav.Link>
               <Nav.Link>
-                <Link to="/dashboard/default">Dashboard</Link>
+                <Link to="/dashboard">Dashboard</Link>
               </Nav.Link>
               <Nav.Link>
                 <Link to="/todos">Todos</Link>
               </Nav.Link>
+              {isLoggedIn ? (
+                <Nav.Link>
+                  <Link to="/logout">Logout</Link>
+                </Nav.Link>
+              ) : (
+                <Nav.Link>
+                  <Link to="/login">Login</Link>
+                </Nav.Link>
+              )}
             </Nav>
           </Navbar.Collapse>
           <Navbar.Collapse className="justify-content-end">
-            <Navbar.Text>
-              Signed in as: <a href="#login">Mark Otto</a>
-            </Navbar.Text>
+            {isLoggedIn ? (
+              <Navbar.Text>
+                Signed in as: <Link to="/login">{user}</Link>
+              </Navbar.Text>
+            ) : (
+              <Navbar.Text>Not logged in</Navbar.Text>
+            )}
           </Navbar.Collapse>
         </Container>
       </Navbar>

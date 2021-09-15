@@ -1,6 +1,13 @@
 import axios from 'axios'
 
+// const username = 'user'
+// const password = 'password'
+
+// const basicAuthHeader = 'Basic ' + window.btoa(username + ':' + password)
+// const config = { headers: { authorization: basicAuthHeader } }
+
 export const getTodos = async (user) => {
+  // console.log(basicAuthHeader)
   const res = await axios.get(`http://localhost:8080/users/${user}/todos`)
 
   return res.data

@@ -8,10 +8,12 @@ import * as yup from 'yup'
 import { getTodo, updateTodo, createTodo } from '../actions/todos'
 import Spinner from './Spinner'
 import { useHistory } from 'react-router'
+import { useAuth } from '../context/AuthContext'
 
 const Todo = () => {
   const history = useHistory()
   const { id } = useParams()
+  const { user } = useAuth()
   const [formData, setFormData] = useState({
     id: '',
     description: '',
@@ -20,14 +22,14 @@ const Todo = () => {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    if (id == -1) {
+    if (id === '-1') {
       console.log('id is -1')
       setIsLoading(false)
       return
     }
 
     const fetchData = async () => {
-      const data = await getTodo('Charlie', id)
+      const data = await getTodo(user, id)
 
       setFormData({
         id: data.id,
@@ -38,7 +40,7 @@ const Todo = () => {
     }
 
     fetchData()
-  }, [])
+  }, [id, user])
 
   const initialValues = formData
 
@@ -49,23 +51,23 @@ const Todo = () => {
 
   const onSubmit = async (values) => {
     console.log({
-      username: 'Charlie',
+      username: user,
       description: values.description,
       targetDate: values.targetDate,
       done: false,
     })
 
-    if (id == -1) {
-      await createTodo('Charlie', {
-        username: 'Charlie',
+    if (id === '-1') {
+      await createTodo(user, {
+        username: user,
         description: values.description,
         targetDate: values.targetDate,
         done: false,
       })
     } else {
-      await updateTodo('Charlie', values.id, {
+      await updateTodo(user, values.id, {
         id: values.id,
-        username: 'Charlie',
+        username: user,
         description: values.description,
         targetDate: values.targetDate,
         done: false,
