@@ -5,4 +5,6 @@ export const jwtAuthenticate = async (username, password) => {
     username,
     password,
   })
+
+  return res
 }

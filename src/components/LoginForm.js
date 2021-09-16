@@ -23,18 +23,11 @@ const LoginForm = () => {
   })
 
   const onSubmit = (values) => {
-    const basicAuthHeader =
-      'Basic ' + window.btoa(values.username + ':' + values.password)
-
-    axios
-      .get('http://localhost:8080/basicauth', {
-        headers: { authorization: basicAuthHeader },
-      })
+    jwtAuthenticate(values.username, values.password)
       .then((res) => {
         console.log(res)
-        // SetupAxiosInterceptors(basicAuthHeader)
         setAlertTimeout({ message: 'Login Success!' })
-        login(values.username)
+        login(values.username, res.data.token)
         history.push(`/dashboard`)
       })
       .catch((err) => {

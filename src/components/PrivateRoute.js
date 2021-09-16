@@ -3,12 +3,18 @@ import { Route, Redirect } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-  const { isLoggedIn } = useAuth()
+  const { isLoggedIn, loading } = useAuth()
+
+  console.log(`isLoggedIn: ${isLoggedIn}, loading: ${loading}`)
 
   return (
     <Route
       render={(props) =>
-        !isLoggedIn ? <Redirect to="/login" /> : <Component {...props} />
+        !isLoggedIn && !loading ? (
+          <Redirect to="/login" />
+        ) : (
+          <Component {...props} />
+        )
       }
       {...rest}
     />
