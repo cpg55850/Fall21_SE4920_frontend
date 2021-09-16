@@ -17,8 +17,8 @@ export const AuthContextProvider = ({ children }) => {
       console.log('user found in sessionStorage, setting the user...')
       setUser(sessionStorage.authenticatedUser)
       SetupAxiosInterceptors(sessionStorage.token)
-      setLoading(false)
     }
+    setLoading(false)
   }, [])
 
   const login = (username, token) => {
